@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.algaworks.despacheweb.controller.page.PageWrapper;
 import com.algaworks.despacheweb.model.Veiculo;
 import com.algaworks.despacheweb.repo.filter.VeiculoFilter;
 import com.algaworks.despacheweb.service.EstadoService;
