@@ -1,0 +1,168 @@
+<!DOCTYPE html>	
+<html xmlns="http://www.w3.org/1999/xhtml" 
+		xmlns:th="http://www.thymeleaf.org"
+		xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+		layout:decorator="'layout/LayoutPadrao'"
+		xmlns:despacheWeb="http://despacheWeb.algaworks.com">
+<head>
+<title>Inicio</title>
+</head>
+<body>
+	<section class="aw-layout-content  js-content" layout:fragment="conteudo">
+		<section class="content-header">
+			
+	    </section>
+	    
+	    <section class="content">
+	      <!-- Default box -->
+	      <div class="box">
+	        <div class="box-header with-border">
+	          <h3 class="box-title">Protocolo</h3>
+	          <div class="box-tools pull-right">
+	            <button type="button" class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip"
+	                    title="Collapse">
+	              <i class="fa fa-minus"></i></button>
+	            <button type="button" class="btn btn-box-tool" data-widget="remove" data-toggle="tooltip" title="Remove">
+	              <i class="fa fa-times"></i></button>
+	          </div>
+	        </div>
+	        <div class="box-body">
+			    <div class="row">
+			    	<div class="col-sm-12">
+			    		<form method="GET" th:object="${protocoloFilter}">
+							<div class="row">
+								<div class="form-group  col-sm-6">
+									<label class="control-label" for="cliente">Cliente</label>
+									<select id="cliente" class="form-control" th:field="*{cliente}">
+					                    <option value="">Todas os clientes</option>
+					                    <option th:each="cliente : ${clientes}" th:text="${cliente.nome}" th:value="${cliente.codigo}"></option>
+					                </select>
+								</div>
+								<div class="form-group  col-sm-6">
+									<label class="control-label" for="nome">Descrição</label>
+									<input type="text" class="form-control" id="descricao" autofocus="autofocus" th:field="*{descricao}"/>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-sm-6  form-group">
+									<label for="valorDe">Data do Protocolo</label>
+									<div class="form-inline">
+										<input id="desde" type="text" class="form-control js-data" th:field="*{desde}" autocomplete="off"/>
+										<label for="valorAte" class="aw-form-label-between">até</label>
+										<input id="ate" type="text" class="form-control js-data" th:field="*{ate}" autocomplete="off"/>
+									</div>
+								</div>
+							</div>
+							
+							<button type="submit" class="btn  btn-primary">Pesquisar</button>
+						</form>
+						
+						<div class="table-responsive  bw-tabela-simples">
+							<table class="table  table-hover">
+								<thead>
+									<tr>
+										<th class="table-protocolos-col-cliente">
+											<despacheWeb:order page="${pagina}" field="c.nome" text="Cliente"/>
+										</th>
+										
+										<th class="table-protocolos-col-dataCriacao">Data do Protocolo</th>
+										
+										<th class="table-protocolos-col-descricao">
+											<despacheWeb:order page="${pagina}" field="descricao" text="Descrição"/>
+										</th>
+										
+										<th class="table-clientes-col-acoes"></th>
+									</tr>
+								</thead>
+								
+								<tbody>
+									<tr th:each="protocolo : ${pagina.conteudo}">
+										<td th:width="300px" th:text="${protocolo.cliente.nome}"></td>
+										<td th:text="${{protocolo.data}}"></td>
+										<td th:text="${protocolo.descricao}"></td>
+
+										<td class="text-center">
+											<a class="btn btn-default" th:href=@{protocolos/download/{codigo}(id=${protocolo.codigo})}>
+												<i class="glyphicon glyphicon-download-alt"></i>
+											</a>
+											<a class="btn btn-default" th:href=@{protocolos/{codigo}(codigo=${protocolo.codigo})}>
+												<i class="glyphicon glyphicon-pencil"></i>
+											</a>
+											<a class="btn btn-danger">
+												<i class="glyphicon glyphicon-remove"></i>
+											</a>
+											<!-- 
+											<a class="btn  btn-link  btn-xs" title="Download assinatura"> 
+												<i class="glyphicon glyphicon-pencil"></i>
+											</a>
+											<a class="btn  btn-link  btn-xs" title="Editar"> 
+												<i class="glyphicon glyphicon-pencil"></i>
+											</a>
+											<a class="btn  btn-link  btn-xs" title="Excluir">
+												<i class="glyphicon glyphicon-remove"></i>
+											</a> -->
+										</td>
+									</tr>
+									<tr th:if="${#lists.isEmpty(pagina)}">
+										<td colspan="7">Nenhum protocolo encontrado!</td>
+									</tr> 
+								</tbody>
+							</table>
+						</div>
+						
+						<div class="col-sm-12 text-center" th:if="${not pagina.vazia}">
+							<nav>
+								<ul class="pagination pagination-sm" th:with="paginaAtual=${pagina.atual}">
+									<li th:class="${pagina.primeira} ? disabled">
+										<a th:href="|${pagina.urlParaPagina(paginaAtual - 1)}|" th:remove="${pagina.primeira} ? tag"><span>&laquo;</span></a>
+									</li>
+									
+									<th:block th:each="p : ${#numbers.sequence(1, pagina.total)}" th:with="numeroPagina=${p - 1}">
+										<li th:class="${paginaAtual == numeroPagina} ? active">
+											<a th:href="|${pagina.urlParaPagina(numeroPagina)}|">[[${p}]]</a>
+										</li>
+									</th:block>
+									
+									
+									<li th:class="${pagina.ultima} ? disabled">
+										<a th:href="|${pagina.urlParaPagina(paginaAtual + 1)}|" th:remove="${pagina.ultima} ? tag"><span>&raquo;</span></a>
+									</li>
+								</ul>
+							</nav>
+						</div>
+						
+						
+						
+						
+						
+						
+		        	 </div>
+		        </div>
+	        </div>
+	        
+	        <!-- /.box-body -->
+	      	<div class="box-footer">
+	         	<div class="row">
+	         		<div class="col-sm-2">
+						<div class="aw-page-header-controls">
+							<a class="btn btn-default" th:href="@{/protocolos/novo}">
+								<i class="glyphicon glyphicon-plus-sign"></i>
+								<span class="hidden-xs hidden-sm">Novo protocolo</span>
+							</a>
+						</div>
+					</div>
+					<div class="col-sm-10">
+					</div>
+				</div>
+	        </div>
+	        <!-- /.box-footer-->
+	      </div>
+	      <!-- /.box -->
+	
+	    </section>
+	</section>
+	
+	<th:block layout:fragment="javascript-extra">
+		<script th:src="@{/javascripts/protocolo/PesquisaProtocolos.js}"></script>
+	</th:block>
+</body>

@@ -1,0 +1,95 @@
+<!DOCTYPE html>	
+<html xmlns="http://www.w3.org/1999/xhtml" 
+		xmlns:th="http://www.thymeleaf.org"
+		xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+		layout:decorator="'layout/LayoutPadrao'"
+		xmlns:data="http://www.thymeleaf.org/extras/data"
+		xmlns:despacheWeb="http://despacheWeb.algaworks.com">
+		
+<head>
+<title>Inicio</title>
+</head>
+<body>
+	<section class="aw-layout-content  js-content" layout:fragment="conteudo">
+		<section class="content-header">
+			
+	    </section>
+	    
+	    <section class="content">
+	      <!-- Default box -->
+	      <div class="box">
+	        <div class="box-header with-border">
+	          <h3 class="box-title">Protocolo</h3>
+	          
+	        </div>
+	        <div class="box-body">
+			    <div class="row">
+			    	<div class="col-sm-12">
+						<form method="POST" th:object="${protocolo}" th:action="@{/protocolos/novo}" class="form-vertical  js-form-loading" enctype="multipart/form-data">
+							
+							<input type="hidden" th:field="*{codigo}"/>
+							
+							<despacheWeb:message/>	
+								<div class="row">
+									<div class="form-group  col-sm-3">
+										<label class="control-label" for="cliente">Cliente</label>
+										<select id="cliente" class="form-control" th:field="*{cliente.codigo}">
+						                    <option value="">Todas os clientes</option>
+						                    <option th:each="cliente : ${clientes}" th:text="${cliente.nome}" th:value="${cliente.codigo}"></option>
+						                </select>
+									</div>
+									<div class="col-sm-3">
+										<div class="form-group" despacheWeb:classforerror="descricao">
+											<label for="descricao" class="control-label">Descrição</label>
+											<input id="descricao" type="text" class="form-control" autofocus="autofocus" th:field="*{descricao}"/>
+										</div>
+									</div>
+									<div class="col-sm-3">
+										<div class="form-group" despacheWeb:classforerror="data">
+											<label for="data" class="control-label">Data</label>
+											<input id="data" type="text" class="form-control js-data" th:field="*{data}" autocomplete="off"/>
+										</div>
+									</div>
+									<div class="col-sm-3">
+										<div class="form-group" despacheWeb:classforerror="assinatura">
+											<label for="assinatura" class="control-label">Assinatura</label>
+											<input id="assinatura" type="file" th:field="*{file}"/>
+										</div>
+									</div>
+									
+								</div>
+								
+								<div class="form-group">
+									<button class="btn  btn-primary" type="submit">Salvar</button>
+								</div>	
+							</form>
+		        	 </div>
+		        </div>
+	        </div>
+	        
+	        <!-- /.box-body -->
+	      	<div class="box-footer">
+	         	<div class="row">
+	         		<div class="col-sm-2">
+						<div class="aw-page-header-controls">
+							<a class="btn btn-default" th:href="@{/protocolos/}">
+								<i class="glyphicon glyphicon-plus-sign"></i>
+								<span class="hidden-xs hidden-sm">Pesquisar</span>
+							</a>
+						</div>
+					</div>
+					<div class="col-sm-10">
+					</div>
+				</div>
+	        </div>
+	        <!-- /.box-footer-->
+	      </div>
+	      <!-- /.box -->
+	
+	    </section>
+	</section>
+	
+	<th:block layout:fragment="javascript-extra">
+		<script th:src="@{/javascripts/protocolo/CadastroProtocolo.js}"></script>
+	</th:block>
+</body>

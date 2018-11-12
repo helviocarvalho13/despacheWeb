@@ -1,0 +1,23 @@
+CREATE TABLE cliente (
+	codigo BIGINT(20) PRIMARY KEY AUTO_INCREMENT,
+	nome VARCHAR(200) NOT NULL,
+	email VARCHAR(50),
+	tipo_pessoa VARCHAR(15) NOT NULL,
+    cpf_cnpj VARCHAR(30) NOT NULL,
+    rg VARCHAR(30),
+    numero_contato VARCHAR(20) NOT NULL,
+    numero_contato_alternativo VARCHAR(20),
+    cep VARCHAR(30),
+    complemento VARCHAR(300),
+    logradouro VARCHAR(300),
+    numero VARCHAR(10),
+    data_emissao_rg DATE,
+    data_nascimento DATE,
+    orgao_emissor_rg VARCHAR(50),
+    codigo_naturalidade BIGINT(20),
+    observacao VARCHAR(500),
+	codigo_cidade BIGINT(20),
+	status VARCHAR(30) NOT NULL,
+	FOREIGN KEY (codigo_cidade) REFERENCES cidade(codigo),
+	FOREIGN KEY (codigo_naturalidade) REFERENCES cidade(codigo)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

@@ -1,0 +1,190 @@
+<!DOCTYPE html>	
+<html xmlns="http://www.w3.org/1999/xhtml" 
+		xmlns:th="http://www.thymeleaf.org"
+		xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+		layout:decorator="'layout/LayoutPadrao'"
+		xmlns:despacheWeb="http://despacheWeb.algaworks.com"
+		xmlns:data="http://www.thymeleaf.org/extras/data"
+		xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+<title>Inicio</title>
+</head>
+<body>
+	<section class="aw-layout-content  js-content" layout:fragment="conteudo">
+		<section class="content-header">
+			
+	    </section>
+	    
+	    <section class="content">
+	      <!-- Default box -->
+	      <div class="box">
+	        <div class="box-header with-border">
+	          <h3 class="box-title">Usuario</h3>
+	          <div class="box-tools pull-right">
+	            <button type="button" class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip"
+	                    title="Collapse">
+	              <i class="fa fa-minus"></i></button>
+	            <button type="button" class="btn btn-box-tool" data-widget="remove" data-toggle="tooltip" title="Remove">
+	              <i class="fa fa-times"></i></button>
+	          </div>
+	        </div>
+	        <div class="box-body">
+			    <div class="row">
+			    	<div class="col-sm-12">
+			    		<form method="GET" th:object="${usuarioFilter}">
+							<div class="row">
+								<div class="form-group  col-sm-6">
+									<label class="control-label" for="nome">Nome</label>
+									<input type="text" class="form-control" id="nome" autofocus="autofocus" th:field="*{nome}"/>
+								</div>
+								<div class="form-group  col-sm-6">
+									<label class="control-label" for="email">E-mail</label>
+									<input type="text" class="form-control" id="email" autofocus="autofocus" th:field="*{email}"/>
+								</div>
+							</div>
+							<div class="row">
+								<div class="form-group  col-sm-12">
+									<label class="control-label">Grupos</label>
+										<div>
+											<th:block th:each="grupo : ${grupos}">
+												<div>
+													<input type="checkbox" th:value="${grupo.codigo}" th:field="*{grupos}"/>
+													<label th:for="${#ids.prev('grupos')}" th:text="${grupo.nome}"></label>
+												</div>
+											</th:block>
+										</div>
+								</div>
+							</div>
+									
+							<button type="submit" class="btn  btn-primary">Pesquisar</button>
+						</form>
+						
+						<div class="aw-datatable-toolbar">
+							<button class="btn btn-default btn-xs js-status-btn disabled" data:status="ATIVAR" data:url="@{/usuarios/status}">
+								<span>Ativar</span>
+							</button>
+							
+							<button class="btn btn-default btn-xs js-status-btn disabled" data:status="DESATIVAR" data:url="@{/usuarios/status}">
+								<span>Desativar</span>
+							</button>
+						</div>
+						
+						<div class="table-responsive  bw-tabela-simples">
+							<table class="table  table-hover">
+								<thead>
+									<tr>	
+										<th class="table-usuarios-col-status">
+											<div>
+												<input type="checkbox" class="js-selecao-todos"/>
+												<label></label>
+											</div>
+										</th>
+										<th th:width="600px" class="table-usuarios-col-nome">
+											<despacheWeb:order page="${pagina}" field="nome" text="Nome"/>
+										</th>
+										<th class="table-usuarios-col-email">
+											<despacheWeb:order page="${pagina}" field="email" text="E-mail"/>
+										</th>
+										<th class="table-usuarios-col-status">
+											<despacheWeb:order page="${pagina}" field=grupos text="Grupos"/>
+										</th>
+										<th class="table-usuarios-col-status">
+											<despacheWeb:order page="${pagina}" field="ativo" text="Status"/>
+										</th>
+										<th class="table-usuarios-col-acoes"></th>
+									</tr>
+								</thead>
+								
+								<tbody>
+									<tr th:each="usuario : ${pagina.conteudo}">
+										<td>
+											<div th:if="${#authentication.principal.usuario.codigo != usuario.codigo}">
+												<input type="checkbox" class="js-selecao" data:codigo="${usuario.codigo}"/>
+												<label></label>
+											</div>
+										</td>
+										<td th:width="600px" th:text="${usuario.nome}"></td>
+										<td th:text="${usuario.email}"></td>
+										<td>
+											<span th:each="grupo : ${usuario.grupos}" th:text="${grupo.nome}"></span>
+										</td>
+										<td>
+											<th:block th:if="${usuario.ativo}">
+												<span class="label label-success">Ativo</span>
+											</th:block>
+											<th:block th:if="${not usuario.ativo}">
+												<span class="label label-danger">Inativo</span>
+											</th:block>
+										</td>
+										<td class="text-center">
+											<!-- <a class="btn  btn-link  btn-xs" title="Editar" th:href="@{/usuarios/{codigo}(codigo=${usuario.codigo})}"> 
+												<i class="glyphicon glyphicon-pencil"></i>
+											</a> -->
+											<a class="btn btn-default" th:href=@{usuarios/{codigo}(codigo=${usuario.codigo})}>
+												<i class="glyphicon glyphicon-pencil"></i>
+											</a>
+											<!-- 
+											<a class="btn  btn-link  btn-xs js-tooltip js-exclusao-btn" title="Excluir" href="#" data:url="@{/usuarios/{codigo}(codigo=${usuario.codigo})}" data:objeto="${usuario.nome}">
+												<i class="glyphicon glyphicon-remove"></i>
+											</a>
+											 -->
+										</td>
+									</tr>
+									<tr th:if="${#lists.isEmpty(pagina)}">
+										<td colspan="6">Nenhuma cidade encontrado!</td>
+									</tr> 
+								</tbody>
+							</table>
+						</div>
+						
+						<div class="col-sm-12 text-center" th:if="${not pagina.vazia}">
+							<nav>
+								<ul class="pagination pagination-sm" th:with="paginaAtual=${pagina.atual}">
+									<li th:class="${pagina.primeira} ? disabled">
+										<a th:href="|${pagina.urlParaPagina(paginaAtual - 1)}|" th:remove="${pagina.primeira} ? tag"><span>&laquo;</span></a>
+									</li>
+									
+									<th:block th:each="p : ${#numbers.sequence(1, pagina.total)}" th:with="numeroPagina=${p - 1}">
+										<li th:class="${paginaAtual == numeroPagina} ? active">
+											<a th:href="|${pagina.urlParaPagina(numeroPagina)}|">[[${p}]]</a>
+										</li>
+									</th:block>
+									
+									
+									<li th:class="${pagina.ultima} ? disabled">
+										<a th:href="|${pagina.urlParaPagina(paginaAtual + 1)}|" th:remove="${pagina.ultima} ? tag"><span>&raquo;</span></a>
+									</li>
+								</ul>
+							</nav>
+						</div>
+						
+		        	 </div>
+		        </div>
+	        </div>
+	        
+	        <!-- /.box-body -->
+	      	<div class="box-footer">
+	         	<div class="row">
+	         		<div class="col-sm-2">
+						<div class="aw-page-header-controls">
+							<a class="btn btn-default" th:href="@{/usuarios/novo}">
+								<i class="glyphicon glyphicon-plus-sign"></i>
+								<span class="hidden-xs hidden-sm">Novo usuário</span>
+							</a>
+						</div>
+					</div>
+					<div class="col-sm-10">
+					</div>
+				</div>
+	        </div>
+	        <!-- /.box-footer-->
+	      </div>
+	      <!-- /.box -->
+	
+	    </section>
+	</section>
+	
+	<th:block layout:fragment="javascript-extra">
+		<script th:src="@{/javascripts/multiselecao.js}"></script>
+	</th:block>
+</body>

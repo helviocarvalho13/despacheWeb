@@ -1,0 +1,227 @@
+<!DOCTYPE html>	
+<html xmlns="http://www.w3.org/1999/xhtml" 
+		xmlns:th="http://www.thymeleaf.org"
+		xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+		layout:decorator="'layout/LayoutPadrao'"
+		xmlns:data="http://www.thymeleaf.org/extras/data"
+		xmlns:despacheWeb="http://despacheWeb.algaworks.com">
+		
+<head>
+<title>Inicio</title>
+</head>
+<body>
+	<section class="aw-layout-content  js-content" layout:fragment="conteudo">
+		<section class="content-header">
+			
+	    </section>
+	    
+	    <section class="content">
+	      <!-- Default box -->
+	      <div class="box">
+	        <div class="box-header with-border">
+	          <h3 class="box-title">Cliente</h3>
+	          
+	        </div>
+	        <div class="box-body">
+			    <div class="row">
+			    	<div class="col-sm-12">
+						<form method="POST" th:object="${cliente}" th:action="@{/clientes/novo}" class="form-vertical  js-form-loading">
+						
+						<input type="hidden" th:field="*{codigo}"/>
+						
+							<despacheWeb:message/>	
+								<div class="row">
+									<div class="col-sm-3">
+										<div class="form-group" despacheWeb:classforerror="nome">
+											<label for="nome" class="control-label">Nome</label>
+											<input id="nome" type="text" class="form-control" autofocus="autofocus" th:field="*{nome}"/>
+										</div>
+									</div>
+									<div class="col-sm-3">
+										<div class="form-group" despacheWeb:classforerror="rg">
+											<label for="rg">RG</label>
+											<input id="rg" type="text" class="form-control" th:field="*{rg}" />
+										</div>
+									</div>
+									<div class="col-sm-3">
+										<div class="form-group" despacheWeb:classforerror="dataEmissaoRg">
+											<label for="dataEmissaoRg" class="control-label">Data de Emissão RG</label>
+											<input id="dataEmissaoRg" type="text" class="form-control js-data" th:field="*{dataEmissaoRg}" autocomplete="off"/>
+										</div>
+									</div>
+									<div class="col-sm-3">
+										<div class="form-group" despacheWeb:classforerror="orgaoEmissorRg">
+											<label for="orgaoEmissorRg">Órgão Emissor do RG</label>
+											<input id="orgaoEmissorRg" type="text" class="form-control" th:field="*{orgaoEmissorRg}" />
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-sm-3">
+										<div class="form-group" despacheWeb:classforerror="dataNascimento">
+											<label for="dataNascimento" class="control-label">Data de Nascimento</label>
+											<input id="dataNascimento" type="text" class="form-control js-data" th:field="*{dataNascimento}" autocomplete="off"/>
+										</div>
+									</div>
+									
+										<!-- <div class="form-group" despacheWeb:classforerror="naturalidade">
+											<label for="naturalidade">Naturalidade</label>
+											<input id="naturalidade" type="text" class="form-control" th:field="*{naturalidade}" />
+										</div>-->
+										<div class="row">
+											<div class="col-sm-4">
+												<div class="form-group">
+													<label for="estadoNaturalidade" class="control-label">Estado</label>
+													<select id="estadoNaturalidade" class="form-control" th:field="*{estadoNaturalidade}">
+														<option value="">Selecione o estado</option>
+														<option th:each="estadoNaturalidade : ${estados}" th:value="${estadoNaturalidade.codigo}" th:text="|${estadoNaturalidade.nome} - ${estadoNaturalidade.sigla}|"></option>
+													</select>
+												</div>
+									 		</div>
+											<div class="col-sm-4">
+												<div class="form-group">
+													<label for="naturalidade">Naturalidade</label>
+													<div class="bw-field-action">
+													<input type="hidden" id="inputHiddenNaturalidadeSelecionada" th:value="*{naturalidade} != null ? *{naturalidade.codigo}">
+														<select id="naturalidade" class="form-control" th:attr="data-url=@{/cidades}" th:field="*{naturalidade}"></select>
+														
+														<div class="bw-field-action__icon js-img-loading" style="display: none">
+															<img th:src="@{/images/mini-loading.gif}"/>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									
+								</div>
+								<div class="row">
+									<div class="col-sm-2">
+										<div class="form-group" despacheWeb:classforerror="tipoPessoa">
+											<label for="origem" class="control-label">Tipo Pessoa</label>
+											<div class="radio radio-inline">
+												<th:block th:each="tipoPessoa : ${tipoPessoa}" >
+													<div>
+														<input th:id="|id_${tipoPessoa}|" type="radio" name="tipoPessoa" class="js-radio-tipoPessoa"
+														th:field="*{tipoPessoa}" th:value="${tipoPessoa}" 
+														th:attr="data-mascara=${tipoPessoa.mascara}, data-documento=${tipoPessoa.documento}">
+														<label class="control-label" th:for="|id_${tipoPessoa}|" th:text="${tipoPessoa.descricao}"></label>
+													</div>
+												</th:block>
+											</div>
+										</div>
+									</div>
+									<div class="col-sm-3">
+										<div class="form-group" despacheWeb:classforerror="cpfOuCnpj">
+											<label for="cpfCnpj">CPF/CNPJ</label>
+											<input id="cpfCnpj" type="text" class="form-control" th:field="*{cpfOuCnpj}" disabled />
+										</div>
+									</div>
+									<div class="col-sm-3">
+										<div class="form-group" despacheWeb:classforerror="email">
+											<label for="email" class="control-label">E-mail</label>
+											<input id="email" type="text" class="form-control" th:field="*{email}"/>
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-sm-3">
+										<div class="form-group" despacheWeb:classforerror="numeroContato">
+											<label for="numeroContato" class="control-label">Número de Contato</label>
+											<input id="numeroContato" type="text" class="form-control js-phone-number" th:field="*{numeroContato}"/>
+										</div>
+									</div>
+									<div class="col-sm-3">
+										<div class="form-group" despacheWeb:classforerror="numeroContatoAlternativo">
+											<label for="numeroContatoAlternativo" class="control-label">Número de Contato Opcional</label>
+											<input id="numeroContatoAlternativo" type="text" class="form-control js-phone-number" th:field="*{numeroContatoAlternativo}"/>
+										</div>
+									</div>
+								</div>
+								<div class="box">
+									<div class="box-body">
+										<div class="row">
+										 	<div class="col-sm-3">
+												<div class="form-group" despacheWeb:classforerror="endereco.logradouro">
+													<label for="logradouro">Logradouro</label>
+													<input id="logradouro" type="text" class="form-control" th:field="*{endereco.logradouro}" />
+												</div>
+											</div>
+											<div class="col-sm-3">
+												<div class="form-group" despacheWeb:classforerror="endereco.numero">
+													<label for="numero">Número</label>
+													<input id="numero" type="text" class="form-control" th:field="*{endereco.numero}" />
+												</div>
+											</div>
+											<div class="col-sm-3">
+												<div class="form-group" despacheWeb:classforerror="endereco.complemento">
+													<label for="complemento">Complemento</label>
+													<input id="complemento" type="text" class="form-control" th:field="*{endereco.complemento}" />
+												</div>
+											</div>
+											<div class="col-sm-3">
+												<div class="form-group" despacheWeb:classforerror="endereco.cep">
+													<label for="cep">CEP</label>
+													<input id="cep" type="text" class="form-control js-cep" th:field="*{endereco.cep}" />
+												</div>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-sm-4">
+												<div class="form-group">
+													<label for="estado" class="control-label">Estado</label>
+													<select id="estado" class="form-control" th:field="*{endereco.estado}">
+														<option value="">Selecione o estado</option>
+														<option th:each="estado : ${estados}" th:value="${estado.codigo}" th:text="|${estado.nome} - ${estado.sigla}|"></option>
+													</select>
+												</div>
+									 		</div>
+											<div class="col-sm-4">
+												<div class="form-group">
+													<label for="cidade">Cidade</label>
+													<div class="bw-field-action">
+													<input type="hidden" id="inputHiddenCidadeSelecionada" th:value="*{endereco.cidade} != null ? *{endereco.cidade.codigo}">
+														<select id="cidade" class="form-control" th:attr="data-url=@{/cidades}" th:field="*{endereco.cidade}"></select>
+														
+														<div class="bw-field-action__icon js-img-loading" style="display: none">
+															<img th:src="@{/images/mini-loading.gif}"/>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="form-group">
+									<button class="btn  btn-primary" type="submit">Salvar</button>
+								</div>	
+							</form>
+		        	 </div>
+		        </div>
+	        </div>
+	        
+	        <!-- /.box-body -->
+	      	<div class="box-footer">
+	         	<div class="row">
+	         		<div class="col-sm-2">
+						<div class="aw-page-header-controls">
+							<a class="btn btn-default" th:href="@{/clientes/}">
+								<i class="glyphicon glyphicon-plus-sign"></i>
+								<span class="hidden-xs hidden-sm">Pesquisar</span>
+							</a>
+						</div>
+					</div>
+					<div class="col-sm-10">
+					</div>
+				</div>
+	        </div>
+	        <!-- /.box-footer-->
+	      </div>
+	      <!-- /.box -->
+	
+	    </section>
+	</section>
+	
+	<th:block layout:fragment="javascript-extra">
+		<script th:src="@{/javascripts/cliente/CadastroCliente.js}"></script>
+	</th:block>
+</body>

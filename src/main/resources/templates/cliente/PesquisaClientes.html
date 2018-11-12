@@ -1,0 +1,157 @@
+<!DOCTYPE html>	
+<html xmlns="http://www.w3.org/1999/xhtml" 
+		xmlns:th="http://www.thymeleaf.org"
+		xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+		layout:decorator="'layout/LayoutPadrao'"
+		xmlns:despacheWeb="http://despacheWeb.algaworks.com">
+<head>
+<title>Inicio</title>
+</head>
+<body>
+	<section class="aw-layout-content  js-content" layout:fragment="conteudo">
+		<section class="content-header">
+			
+	    </section>
+	    
+	    <section class="content">
+	      <!-- Default box -->
+	      <div class="box">
+	        <div class="box-header with-border">
+	          <h3 class="box-title">Cliente</h3>
+	          <div class="box-tools pull-right">
+	            <button type="button" class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip"
+	                    title="Collapse">
+	              <i class="fa fa-minus"></i></button>
+	            <button type="button" class="btn btn-box-tool" data-widget="remove" data-toggle="tooltip" title="Remove">
+	              <i class="fa fa-times"></i></button>
+	          </div>
+	        </div>
+	        <div class="box-body">
+			    <div class="row">
+			    	<div class="col-sm-12">
+			    		<form method="GET" th:object="${clienteFilter}">
+							<div class="row">
+								<div class="form-group  col-sm-6">
+									<label class="control-label" for="nome">Nome</label>
+									<input type="text" class="form-control" id="nome" autofocus="autofocus" th:field="*{nome}"/>
+								</div>
+								
+								<div class="form-group  col-sm-3" >
+									<label class="control-label" for="cpfOuCnpj">CPF/CNPJ</label>
+									<input type="text" class="form-control" id="cpfOuCnpj" th:field="*{cpfOuCnpj}"/>
+								</div>
+								
+								<div class="form-group  col-sm-3">
+									<label class="control-label" for="estadoNaturalidade">Estado(Naturalidade)</label>
+									<select id="estadoNaturalidade" class="form-control" th:field="*{estado}">
+					                    <option value="">Todas as naturalidades</option>
+					                    <option th:each="estado : ${estados}" th:text="${estado.sigla}" th:value="${estado.codigo}"></option>
+					                </select>
+								</div>
+							</div>
+							
+							<button type="submit" class="btn  btn-primary">Pesquisar</button>
+						</form>
+						
+						<div class="table-responsive  bw-tabela-simples">
+							<table class="table  table-hover">
+								<thead>
+									<tr>
+										<th th:width="300px" class="table-clientes-col-nome">
+											<despacheWeb:order page="${pagina}" field="nome" text="Nome"/>
+										</th>
+										<th class="table-clientes-col-tipoPessoa">
+											<despacheWeb:order page="${pagina}" field="tipoPessoa" text="Tipo Pessoa"/>
+										</th>
+										<th class="table-clientes-col-cpfOuCnpj">CPF/CNPJ</th>
+										<th class="table-clientes-col-estado">Estado(Naturalidade)</th>
+										<th class="table-clientes-col-naturalidade">Cidade(Naturalidade)</th>
+										<th class="table-clientes-col-acoes"></th>
+									</tr>
+								</thead>
+								
+								<tbody>
+									<tr th:each="cliente : ${pagina.conteudo}">
+										<td th:width="300px" th:text="${cliente.nome}"></td>
+										<td th:text="${cliente.tipoPessoa.descricao}"></td>
+										<td th:text="${cliente.cpfOuCnpj}"></td>
+										<td th:text="${cliente.naturalidade.estado.sigla}"></td>
+										<td th:text="${cliente.naturalidade.nome}"></td>
+										<td class="text-center">
+											<!-- <a class="btn  btn-link  btn-xs" title="Editar"> 
+												<i class="glyphicon glyphicon-pencil"></i>
+											</a> -->
+											<!-- <a class="btn  btn-link  btn-xs" title="Excluir">
+												<i class="glyphicon glyphicon-remove"></i>
+											</a> -->
+											<a class="btn btn-default" th:href=@{clientes/{codigo}(codigo=${cliente.codigo})}>
+												<i class="glyphicon glyphicon-pencil"></i>
+											</a>
+											<a class="btn btn-danger">
+												<i class="glyphicon glyphicon-remove"></i>
+											</a>
+										</td>
+									</tr>
+									<tr th:if="${#lists.isEmpty(pagina)}">
+										<td colspan="7">Nenhum cliente encontrado!</td>
+									</tr> 
+								</tbody>
+							</table>
+						</div>
+						
+						<div class="col-sm-12 text-center" th:if="${not pagina.vazia}">
+							<nav>
+								<ul class="pagination pagination-sm" th:with="paginaAtual=${pagina.atual}">
+									<li th:class="${pagina.primeira} ? disabled">
+										<a th:href="|${pagina.urlParaPagina(paginaAtual - 1)}|" th:remove="${pagina.primeira} ? tag"><span>&laquo;</span></a>
+									</li>
+									
+									<th:block th:each="p : ${#numbers.sequence(1, pagina.total)}" th:with="numeroPagina=${p - 1}">
+										<li th:class="${paginaAtual == numeroPagina} ? active">
+											<a th:href="|${pagina.urlParaPagina(numeroPagina)}|">[[${p}]]</a>
+										</li>
+									</th:block>
+									
+									
+									<li th:class="${pagina.ultima} ? disabled">
+										<a th:href="|${pagina.urlParaPagina(paginaAtual + 1)}|" th:remove="${pagina.ultima} ? tag"><span>&raquo;</span></a>
+									</li>
+								</ul>
+							</nav>
+						</div>
+						
+						
+						
+						
+						
+						
+		        	 </div>
+		        </div>
+	        </div>
+	        
+	        <!-- /.box-body -->
+	      	<div class="box-footer">
+	         	<div class="row">
+	         		<div class="col-sm-2">
+						<div class="aw-page-header-controls">
+							<a class="btn btn-default" th:href="@{/clientes/novo}">
+								<i class="glyphicon glyphicon-plus-sign"></i>
+								<span class="hidden-xs hidden-sm">Novo cliente</span>
+							</a>
+						</div>
+					</div>
+					<div class="col-sm-10">
+					</div>
+				</div>
+	        </div>
+	        <!-- /.box-footer-->
+	      </div>
+	      <!-- /.box -->
+	
+	    </section>
+	</section>
+	
+	<th:block layout:fragment="javascript-extra">
+		<script th:src="@{/javascripts/cliente/PesquisaClientes.js}"></script>
+	</th:block>
+</body>
